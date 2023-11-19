@@ -34,4 +34,27 @@ class PostModel
     return $stmt;
   }
 
+
+  public function read_by_id()
+  {
+    $query = 'SELECT c.name as category_name, p.*  
+    FROM ' . $this->table . ' p
+    LEFT JOIN categories c ON p.category_id = c.id
+    WHERE p.id = ?';
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->bindParam(1, $this->id);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $this->id = $row['id'];
+    $this->category_id = $row['category_id'];
+    $this->category_name = $row['category_name'];
+    $this->title = $row['title'];
+    $this->body = $row['body'];
+    $this->author = $row['author'];
+    $this->created_at = $row['created_at'];
+  }
+
 }
