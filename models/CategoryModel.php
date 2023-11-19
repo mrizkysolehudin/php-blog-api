@@ -46,5 +46,30 @@ class CategoryModel
     $this->created_at = $row['created_at'];
   }
 
+  public function create()
+  {
+    $query = 'INSERT INTO ' .
+      $this->table . '
+    SET
+      name = :name';
 
+    $stmt = $this->conn->prepare($query);
+
+    // Clean data
+    $this->name = htmlspecialchars(strip_tags($this->name));
+
+    // Bind data
+    $stmt->bindParam(':name', $this->name);
+
+
+    if ($stmt->execute()) {
+      $this->id = $this->conn->lastInsertId();
+
+      return true;
+    }
+
+    printf("Error: $s.\n", $stmt->error);
+
+    return false;
+  }
 }
